@@ -1,14 +1,24 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {Text, View} from 'react-native';
 import {ButtonCalc} from '../components/ButtonCalc';
 import {styles} from '../theme/appTheme';
+
+enum Operators {
+  add,
+  substract,
+  multiply,
+  divide,
+}
 
 export const CalculatorScreen = () => {
   const [previousNumber, setPreviousNumber] = useState('0');
   const [number, setNumber] = useState('0');
 
+  const lastOperation = useRef<Operators>();
+
   const clear = () => {
     setNumber('0');
+    setPreviousNumber('0');
   };
 
   const createNumber = (numberText: string) => {
@@ -59,9 +69,41 @@ export const CalculatorScreen = () => {
     }
   };
 
+  const updatePreviousNumber = () => {
+    if (number.endsWith('.')) {
+      setPreviousNumber(number.slice(0, -1));
+    } else {
+      setPreviousNumber(number);
+    }
+    setNumber('0');
+  };
+
+  const btnDivide = () => {
+    updatePreviousNumber();
+    lastOperation.current = Operators.divide;
+  };
+
+  const btnMultiply = () => {
+    updatePreviousNumber();
+    lastOperation.current = Operators.multiply;
+  };
+
+  const btnSubstract = () => {
+    updatePreviousNumber();
+    lastOperation.current = Operators.substract;
+  };
+
+  const btnAdd = () => {
+    updatePreviousNumber();
+    lastOperation.current = Operators.add;
+  };
+
   return (
     <View style={styles.calculatorContainer}>
-      <Text style={styles.resultSmall}>{previousNumber}</Text>
+      {previousNumber !== '0' && (
+        <Text style={styles.resultSmall}>{previousNumber}</Text>
+      )}
+
       <Text style={styles.result} numberOfLines={1} adjustsFontSizeToFit>
         {number}
       </Text>
@@ -74,25 +116,25 @@ export const CalculatorScreen = () => {
           action={positiveNegative}
         />
         <ButtonCalc text="del" backgroundColor="#9B9B9B" action={btnDelete} />
-        <ButtonCalc text="/" backgroundColor="#FF9427" action={clear} />
+        <ButtonCalc text="/" backgroundColor="#FF9427" action={btnDivide} />
       </View>
       <View style={styles.row}>
         <ButtonCalc text="7" backgroundColor="#2D2D2D" action={createNumber} />
         <ButtonCalc text="8" backgroundColor="#2D2D2D" action={createNumber} />
         <ButtonCalc text="9" backgroundColor="#2D2D2D" action={createNumber} />
-        <ButtonCalc text="x" backgroundColor="#FF9427" action={clear} />
+        <ButtonCalc text="x" backgroundColor="#FF9427" action={btnMultiply} />
       </View>
       <View style={styles.row}>
         <ButtonCalc text="4" backgroundColor="#2D2D2D" action={createNumber} />
         <ButtonCalc text="5" backgroundColor="#2D2D2D" action={createNumber} />
         <ButtonCalc text="6" backgroundColor="#2D2D2D" action={createNumber} />
-        <ButtonCalc text="-" backgroundColor="#FF9427" action={clear} />
+        <ButtonCalc text="-" backgroundColor="#FF9427" action={btnSubstract} />
       </View>
       <View style={styles.row}>
         <ButtonCalc text="1" backgroundColor="#2D2D2D" action={createNumber} />
         <ButtonCalc text="2" backgroundColor="#2D2D2D" action={createNumber} />
         <ButtonCalc text="3" backgroundColor="#2D2D2D" action={createNumber} />
-        <ButtonCalc text="+" backgroundColor="#FF9427" action={clear} />
+        <ButtonCalc text="+" backgroundColor="#FF9427" action={btnAdd} />
       </View>
       <View style={styles.row}>
         <ButtonCalc

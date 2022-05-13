@@ -1,10 +1,10 @@
 import {useRef, useState} from 'react';
 
 enum Operators {
-  add,
-  substract,
-  multiply,
-  divide,
+  Add,
+  Substract,
+  Multiply,
+  Divide,
 }
 
 export const useCalculator = () => {
@@ -77,22 +77,22 @@ export const useCalculator = () => {
 
   const btnDivide = () => {
     updatePreviousNumber();
-    lastOperation.current = Operators.divide;
+    lastOperation.current = Operators.Divide;
   };
 
   const btnMultiply = () => {
     updatePreviousNumber();
-    lastOperation.current = Operators.multiply;
+    lastOperation.current = Operators.Multiply;
   };
 
   const btnSubstract = () => {
     updatePreviousNumber();
-    lastOperation.current = Operators.substract;
+    lastOperation.current = Operators.Substract;
   };
 
   const btnAdd = () => {
     updatePreviousNumber();
-    lastOperation.current = Operators.add;
+    lastOperation.current = Operators.Add;
   };
 
   const calculate = () => {
@@ -100,16 +100,16 @@ export const useCalculator = () => {
     const num2 = Number(previousNumber);
 
     switch (lastOperation.current) {
-      case Operators.add:
+      case Operators.Add:
         setNumber(`${num1 + num2}`);
         break;
-      case Operators.substract:
+      case Operators.Substract:
         setNumber(`${num2 - num1}`);
         break;
-      case Operators.multiply:
+      case Operators.Multiply:
         setNumber(`${num1 * num2}`);
         break;
-      case Operators.divide:
+      case Operators.Divide:
         setNumber(`${num2 / num1}`);
         break;
       default:

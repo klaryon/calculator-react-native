@@ -12,7 +12,36 @@ export const CalculatorScreen = () => {
   };
 
   const createNumber = (numberText: string) => {
-    setNumber(number + numberText);
+    //do not accept double point
+    if (number.includes('.') && numberText === '.') return;
+
+    if (number.startsWith('0') || number.startsWith('-0')) {
+      //decimal point
+      if (numberText === '.') {
+        setNumber(number + numberText);
+        //evaluate if it is another zero, and there is a decimal point
+      } else if (numberText === '0' && number.includes('.')) {
+        setNumber(number + numberText);
+        //evaluate if it is different from zero and it doesn't have a decimal point
+      } else if (numberText !== '0' && !number.includes('.')) {
+        setNumber(numberText);
+        //avoid 000.0
+      } else if (numberText === '0' && !number.includes('.')) {
+        setNumber(number);
+      } else {
+        setNumber(number + numberText);
+      }
+    } else {
+      setNumber(number + numberText);
+    }
+  };
+
+  const positiveNegative = () => {
+    if (number.includes('-')) {
+      setNumber(number.replace('-', ''));
+    } else {
+      setNumber('-' + number);
+    }
   };
 
   return (
@@ -24,7 +53,11 @@ export const CalculatorScreen = () => {
 
       <View style={styles.row}>
         <ButtonCalc text="C" backgroundColor="#9B9B9B" action={clear} />
-        <ButtonCalc text="+/-" backgroundColor="#9B9B9B" action={clear} />
+        <ButtonCalc
+          text="+/-"
+          backgroundColor="#9B9B9B"
+          action={positiveNegative}
+        />
         <ButtonCalc text="del" backgroundColor="#9B9B9B" action={clear} />
         <ButtonCalc text="/" backgroundColor="#FF9427" action={clear} />
       </View>
